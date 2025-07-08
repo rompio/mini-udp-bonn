@@ -1,35 +1,11 @@
 version: '3.9'
 
 services:
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: urban_data
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
-  civitas:
-    image: ghcr.io/m-u-s-t-a-f-a/civitas-core:latest
-    environment:
-      CIVITAS__DATABASE__URL: postgres://postgres:postgres@db:5432/urban_data
-    depends_on:
-      - db
-    ports:
-      - "8001:8000"  # Civitas läuft auf Port 8001
-
   web:
-    build: ./django_backend
+    build: .
+    container_name: mini_udp_web
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./django_backend:/app
     ports:
       - "8000:8000"
-    depends_on:
-      - db
-
-volumes:
-  pgdata:
